@@ -64,7 +64,9 @@ public class UserService {
     public UserDto updateUserByFields(UserDto userDto, Integer id) {
         User user = userRepo.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("The user does not exist by this id: " + id));
-        checkValidBirthDate(userDto.getBirthDate());
+        if (userDto.getBirthDate() != null) {
+            checkValidBirthDate(userDto.getBirthDate());
+        }
         editUserFields(user, userDto);
         User savedUser = userRepo.save(user);
         return modelMapper.map(savedUser, UserDto.class);
