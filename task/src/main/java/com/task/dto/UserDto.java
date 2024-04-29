@@ -1,9 +1,6 @@
 package com.task.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -22,6 +19,7 @@ public class UserDto {
     @NotBlank(message = "last name can't be empty")
     private String lastName;
     @Past(message = "start shouldn't be before current date")
+    @NotNull(message = "birth date can't be empty")
     private LocalDate birthDate;
     private String address;
     private Integer phoneNumber;

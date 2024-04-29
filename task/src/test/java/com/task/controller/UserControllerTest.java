@@ -12,10 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.LocalDate;
 import java.util.List;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,15 +31,7 @@ public class UserControllerTest {
 
     @Test
     public void getAllUsersTest() throws Exception {
-
-        User user = new User(1,
-                "test@mail.com",
-                "test first name",
-                "test last name",
-                LocalDate.of(2000, 10, 10),
-                "test address",
-                50003445);
-
+        User user = ModelUtils.getUser();
         List<User> allUsers = List.of(user);
 
         when(userService.getAllUsers()).thenReturn(allUsers);
@@ -50,35 +39,24 @@ public class UserControllerTest {
         mvc.perform(get("/users")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-
         verify(userService).getAllUsers();
     }
 
     @Test
     public void getUserByIdTest() throws Exception {
-
-        User user = new User(1,
-                "test@mail.com",
-                "test first name",
-                "test last name",
-                LocalDate.of(2000, 10, 10),
-                "test address",
-                50003445);
+        User user = ModelUtils.getUser();
 
         when(userService.getUserById(user.getId())).thenReturn(user);
 
         mvc.perform(get("/users/user?id=1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-
         verify(userService).getUserById(user.getId());
     }
 
     @Test
     public void saveUserTest() throws Exception {
-
         UserDto userDto = ModelUtils.getUserDto();
-
         String json = """
                 {
                  	"email": "test@mail.com",
@@ -96,15 +74,12 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated());
-
         verify(userService).saveUser(any());
     }
 
     @Test
     public void updateUserTest() throws Exception {
-
         UserDto userDto = ModelUtils.getUserDto();
-
         String json = """
                 {
                 	"email": "test@mail.com",
@@ -123,13 +98,11 @@ public class UserControllerTest {
                         .param("id", "1")
                         .content(json))
                 .andExpect(status().isOk());
-
         verify(userService).updateUser(any(), any());
     }
 
     @Test
     public void updateUserByFieldsTest() throws Exception {
-
         String json = """
                 {
                 	"email": "test@mail.com",
@@ -143,20 +116,17 @@ public class UserControllerTest {
                         .param("id", "1")
                         .content(json))
                 .andExpect(status().isOk());
-
         verify(userService).updateUserByFields(any(), any());
     }
 
     @Test
     public void deleteUserTest() throws Exception {
-
         when(userService.deleteUser(1)).thenReturn("test message");
 
         mvc.perform(delete("/users/deleteUser")
                         .contentType(MediaType.APPLICATION_JSON)
                         .param("id", "1"))
                 .andExpect(status().isOk());
-
         verify(userService).deleteUser(any());
     }
 }
