@@ -1,5 +1,6 @@
 package com.task.service;
 
+import com.task.dto.BirthDateRangeDto;
 import com.task.dto.UserDto;
 import com.task.entity.User;
 import com.task.exception.exceptions.BadRequestException;
@@ -9,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -67,12 +67,12 @@ public class UserService {
         if (userDto.getBirthDate() != null) {
             checkValidBirthDate(userDto.getBirthDate());
         }
-        editUserFields(user, userDto);
+        setUserFields(user, userDto);
         User savedUser = userRepo.save(user);
         return modelMapper.map(savedUser, UserDto.class);
     }
 
-    private void editUserFields(User user, UserDto userDto) {
+    private void setUserFields(User user, UserDto userDto) {
         if (userDto.getEmail() != null) {
             user.setEmail(userDto.getEmail());
         }
@@ -98,5 +98,12 @@ public class UserService {
                 .orElseThrow(() -> new IdNotFoundException("The user does not exist by this id: " + id));
         userRepo.delete(user);
         return "User was deleted by this id: " + id;
+    }
+
+    public List<User> getUsersByBirthDateRange(BirthDateRangeDto birthDateRangeDto) {
+        if (birthDateRangeDto.getBirthDateFrom().isAfter(birthDateRangeDto.getBirthDateTo())) {
+            throw new BadRequestException("From date must be less than or equal to To date");
+        }
+        return userRepo.findByBirthDateBetween(birthDateRangeDto.getBirthDateFrom(), birthDateRangeDto.getBirthDateTo());
     }
 }

@@ -1,5 +1,6 @@
 package com.task.controller;
 
+import com.task.dto.BirthDateRangeDto;
 import com.task.dto.UserDto;
 import com.task.entity.User;
 import com.task.service.UserService;
@@ -49,5 +50,10 @@ public class UserController {
     @DeleteMapping("/deleteUser")
     public ResponseEntity<String> deleteUser(Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.deleteUser(id));
+    }
+
+    @GetMapping("/usersByBirthDateRange")
+    public ResponseEntity<List<User>> getUsersByBirthDateRange(@RequestBody BirthDateRangeDto birthDateRangeDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUsersByBirthDateRange(birthDateRangeDto));
     }
 }

@@ -1,6 +1,7 @@
 package com.task.service;
 
 import com.task.ModelUtils;
+import com.task.dto.BirthDateRangeDto;
 import com.task.dto.UserDto;
 import com.task.entity.User;
 import com.task.exception.exceptions.BadRequestException;
@@ -18,7 +19,6 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-
 
 @RunWith(SpringRunner.class)
 public class UserServiceTest {
@@ -137,7 +137,6 @@ public class UserServiceTest {
         verify(modelMapper, times(1)).map(user, UserDto.class);
     }
 
-
     @Test
     public void deleteUserTest() {
         User user = ModelUtils.getUser();
@@ -145,5 +144,26 @@ public class UserServiceTest {
         assertEquals("User was deleted by this id: " + user.getId(), userService.deleteUser(user.getId()));
         verify(userRepo, times(1)).findById(user.getId());
         verify(userRepo, times(1)).delete(user);
+    }
+
+    @Test
+    public void getUsersByBirthDateRangeTest() {
+        User user = ModelUtils.getUser();
+        List<User> userList = List.of(user);
+        BirthDateRangeDto dto = ModelUtils.getBirthDateRangeDto();
+
+        when(userRepo.findByBirthDateBetween(dto.getBirthDateFrom(), dto.getBirthDateTo())).thenReturn(userList);
+        assertEquals(userList, userService.getUsersByBirthDateRange(dto));
+        verify(userRepo, times(1))
+                .findByBirthDateBetween(dto.getBirthDateFrom(), dto.getBirthDateTo());
+    }
+
+    @Test
+    public void getUsersByBirthDateRangeWithInvalidValueTest() {
+        BirthDateRangeDto dto = ModelUtils.getBirthDateRangeDto();
+        dto.setBirthDateTo(LocalDate.of(1999, 11, 10));
+
+        assertThrows(BadRequestException.class,
+                () -> userService.getUsersByBirthDateRange(dto));
     }
 }

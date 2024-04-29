@@ -1,10 +1,10 @@
 package com.task;
 
+import com.task.dto.BirthDateRangeDto;
 import com.task.dto.UserDto;
 import com.task.entity.User;
 import com.task.exception.handler.ExceptionResponse;
 import org.springframework.http.HttpStatus;
-
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,5 +42,12 @@ public class ModelUtils {
         exceptionResponse.setMessage("test");
         exceptionResponse.setDateTime(date.format(formatter));
         return exceptionResponse;
+    }
+
+    public static BirthDateRangeDto getBirthDateRangeDto() {
+        return BirthDateRangeDto.builder()
+                .birthDateFrom(LocalDate.of(2000, 10, 10))
+                .birthDateTo(LocalDate.of(2005, 12, 12))
+                .build();
     }
 }
