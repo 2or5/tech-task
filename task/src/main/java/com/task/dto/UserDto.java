@@ -2,7 +2,6 @@ package com.task.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
-
 import java.time.LocalDate;
 
 @Getter
@@ -22,5 +21,5 @@ public class UserDto {
     @NotNull(message = "birth date can't be empty")
     private LocalDate birthDate;
     private String address;
-    private Integer phoneNumber;
+    private String phoneNumber;
 }

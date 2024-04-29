@@ -1,6 +1,7 @@
 package com.task.controller;
 
 import com.task.ModelUtils;
+import com.task.dto.BirthDateRangeDto;
 import com.task.dto.UserDto;
 import com.task.entity.User;
 import com.task.service.UserService;
@@ -48,7 +49,7 @@ public class UserControllerTest {
 
         when(userService.getUserById(user.getId())).thenReturn(user);
 
-        mvc.perform(get("/users/user?id=1")
+        mvc.perform(get("/users/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(userService).getUserById(user.getId());
@@ -64,13 +65,13 @@ public class UserControllerTest {
                  	"lastName": "test last name",
                  	"birthDate": "2000-10-10",
                  	"address": "test address",
-                 	"phoneNumber": 50003445
+                 	"phoneNumber": "+50003445"
                 }
                 """;
 
         when(userService.saveUser(userDto)).thenReturn(userDto);
 
-        mvc.perform(post("/users/saveUser")
+        mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated());
@@ -87,15 +88,14 @@ public class UserControllerTest {
                 	"lastName": "test last name",
                 	"birthDate": "2000-10-10",
                 	"address": "test address",
-                	"phoneNumber": 50003445
+                	"phoneNumber": "+50003445"
                 }
                 """;
 
         when(userService.updateUser(userDto, 1)).thenReturn(userDto);
 
-        mvc.perform(put("/users/updateUser")
+        mvc.perform(put("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("id", "1")
                         .content(json))
                 .andExpect(status().isOk());
         verify(userService).updateUser(any(), any());
@@ -111,9 +111,8 @@ public class UserControllerTest {
                 }
                 """;
 
-        mvc.perform(patch("/users/editUser")
+        mvc.perform(patch("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("id", "1")
                         .content(json))
                 .andExpect(status().isOk());
         verify(userService).updateUserByFields(any(), any());
@@ -123,10 +122,30 @@ public class UserControllerTest {
     public void deleteUserTest() throws Exception {
         when(userService.deleteUser(1)).thenReturn("test message");
 
-        mvc.perform(delete("/users/deleteUser")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .param("id", "1"))
+        mvc.perform(delete("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(userService).deleteUser(any());
+    }
+
+    @Test
+    public void getUsersByBirthDateRangeTest() throws Exception {
+        BirthDateRangeDto dto = ModelUtils.getBirthDateRangeDto();
+        User user = ModelUtils.getUser();
+        List<User> userList = List.of(user);
+        String json = """
+                {
+                	"birthDateFrom": "2001-04-02",
+                    "birthDateTo": "2014-04-02"
+                }
+                """;
+
+        when(userService.getUsersByBirthDateRange(dto)).thenReturn(userList);
+
+        mvc.perform(get("/users/usersByBirthDateRange")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk());
+        verify(userService).getUsersByBirthDateRange(any());
     }
 }

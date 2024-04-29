@@ -5,6 +5,7 @@ import com.task.dto.UserDto;
 import com.task.entity.User;
 import com.task.exception.exceptions.BadRequestException;
 import com.task.exception.exceptions.IdNotFoundException;
+import com.task.mapping.UserMapper;
 import com.task.repository.UserRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,17 @@ public class UserService {
     private final UserRepo userRepo;
     private final ModelMapper modelMapper;
     private final Integer yearToPass;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepo userRepo, ModelMapper modelMapper, @Value("${yearToPass}") Integer yearToPass) {
+    public UserService(UserRepo userRepo,
+                       ModelMapper modelMapper,
+                       @Value("${yearToPass}") Integer yearToPass,
+                       UserMapper userMapper) {
         this.userRepo = userRepo;
         this.modelMapper = modelMapper;
         this.yearToPass = yearToPass;
+        this.userMapper = userMapper;
     }
 
     public List<User> getAllUsers() {
@@ -67,30 +73,9 @@ public class UserService {
         if (userDto.getBirthDate() != null) {
             checkValidBirthDate(userDto.getBirthDate());
         }
-        setUserFields(user, userDto);
+        userMapper.updateEntityByDto(user, userDto);
         User savedUser = userRepo.save(user);
         return modelMapper.map(savedUser, UserDto.class);
-    }
-
-    private void setUserFields(User user, UserDto userDto) {
-        if (userDto.getEmail() != null) {
-            user.setEmail(userDto.getEmail());
-        }
-        if (userDto.getFirstName() != null) {
-            user.setFirstName(userDto.getFirstName());
-        }
-        if (userDto.getLastName() != null) {
-            user.setLastName(userDto.getLastName());
-        }
-        if (userDto.getBirthDate() != null) {
-            user.setBirthDate(userDto.getBirthDate());
-        }
-        if (userDto.getAddress() != null) {
-            user.setAddress(userDto.getAddress());
-        }
-        if (userDto.getPhoneNumber() != null) {
-            user.setPhoneNumber(userDto.getPhoneNumber());
-        }
     }
 
     public String deleteUser(Integer id) {

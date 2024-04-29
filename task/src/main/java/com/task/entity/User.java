@@ -36,5 +36,5 @@ public class User {
 
     private String address;
 
-    private Integer phoneNumber;
+    private String phoneNumber;
 }

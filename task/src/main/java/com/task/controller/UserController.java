@@ -27,28 +27,28 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAllUsers());
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<User> getUserById(@RequestParam Integer id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
     }
 
-    @PostMapping("/saveUser")
+    @PostMapping
     public ResponseEntity<UserDto> saveUser(@Valid @RequestBody UserDto userDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDto));
     }
 
-    @PutMapping("/updateUser")
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @RequestParam Integer id) {
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(userDto, id));
     }
 
-    @PatchMapping("/editUser")
-    public ResponseEntity<UserDto> updateUserByFields(@RequestBody UserDto userDto, @RequestParam Integer id) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserDto> updateUserByFields(@RequestBody UserDto userDto, @PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateUserByFields(userDto, id));
     }
 
-    @DeleteMapping("/deleteUser")
-    public ResponseEntity<String> deleteUser(Integer id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.deleteUser(id));
     }
 

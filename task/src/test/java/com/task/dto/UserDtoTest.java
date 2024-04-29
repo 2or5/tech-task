@@ -36,5 +36,4 @@ public class UserDtoTest {
 
         assertThat(constraintViolations).hasSize(4);
     }
-
 }

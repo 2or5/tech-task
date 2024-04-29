@@ -6,6 +6,7 @@ import com.task.dto.UserDto;
 import com.task.entity.User;
 import com.task.exception.exceptions.BadRequestException;
 import com.task.exception.exceptions.IdNotFoundException;
+import com.task.mapping.UserMapper;
 import com.task.repository.UserRepo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,6 +29,9 @@ public class UserServiceTest {
 
     @Mock
     private ModelMapper modelMapper;
+
+    @Mock
+    private UserMapper userMapper;
 
     @InjectMocks
     private UserService userService;
@@ -61,7 +65,7 @@ public class UserServiceTest {
         Integer yearToPass = 18;
         UserDto userDto = ModelUtils.getUserDto();
         User user = ModelUtils.getUser();
-        userService = new UserService(userRepo, modelMapper, yearToPass);
+        userService = new UserService(userRepo, modelMapper, yearToPass, userMapper);
 
         when(modelMapper.map(userDto, User.class)).thenReturn(user);
         when(userRepo.save(user)).thenReturn(user);
@@ -78,7 +82,7 @@ public class UserServiceTest {
         Integer yearToPass = 18;
         UserDto userDto = ModelUtils.getUserDto();
         userDto.setBirthDate(LocalDate.of(2020, 11, 17));
-        userService = new UserService(userRepo, modelMapper, yearToPass);
+        userService = new UserService(userRepo, modelMapper, yearToPass, userMapper);
 
         assertThrows(BadRequestException.class,
                 () -> userService.saveUser(userDto));
@@ -89,7 +93,7 @@ public class UserServiceTest {
         Integer yearToPass = 18;
         UserDto userDto = ModelUtils.getUserDto();
         User user = ModelUtils.getUser();
-        userService = new UserService(userRepo, modelMapper, yearToPass);
+        userService = new UserService(userRepo, modelMapper, yearToPass, userMapper);
 
         when(userRepo.findById(1)).thenReturn(Optional.of(user));
         when(modelMapper.map(userDto, User.class)).thenReturn(user);
@@ -108,7 +112,7 @@ public class UserServiceTest {
         Integer yearToPass = 18;
         UserDto userDto = ModelUtils.getUserDto();
         User user = ModelUtils.getUser();
-        userService = new UserService(userRepo, modelMapper, yearToPass);
+        userService = new UserService(userRepo, modelMapper, yearToPass, userMapper);
 
         when(userRepo.findById(1)).thenReturn(Optional.of(user));
         when(userRepo.save(user)).thenReturn(user);
@@ -125,7 +129,7 @@ public class UserServiceTest {
         Integer yearToPass = 18;
         UserDto userDto = new UserDto();
         User user = ModelUtils.getUser();
-        userService = new UserService(userRepo, modelMapper, yearToPass);
+        userService = new UserService(userRepo, modelMapper, yearToPass, userMapper);
 
         when(userRepo.findById(1)).thenReturn(Optional.of(user));
         when(userRepo.save(user)).thenReturn(user);

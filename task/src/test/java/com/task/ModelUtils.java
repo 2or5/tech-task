@@ -19,7 +19,7 @@ public class ModelUtils {
                 .lastName("test last name")
                 .birthDate(LocalDate.of(2000, 10, 10))
                 .address("test address")
-                .phoneNumber(50003445)
+                .phoneNumber("+50003445")
                 .build();
     }
 
@@ -30,7 +30,7 @@ public class ModelUtils {
                 .lastName("test last name")
                 .birthDate(LocalDate.of(2000, 10, 10))
                 .address("test address")
-                .phoneNumber(50003445)
+                .phoneNumber("+50003445")
                 .build();
     }
 

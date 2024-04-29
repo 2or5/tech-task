@@ -43,7 +43,6 @@ public class RestExceptionHandlerTest {
     @Test
     public void handleMethodArgumentExceptionTest() {
         ExceptionResponse exceptionResponse = ModelUtils.getExceptionResponse();
-
         MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
 
         when(exception.getFieldError()).thenReturn(new FieldError("fieldName",
